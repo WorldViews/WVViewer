@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+    This code is based on the ThreeJS webgl_loader_ply and comments in
+    https://stackoverflow.com/questions/30243216/change-square-to-circle-in-three-js-pointcloud
+-->
+
+<head>
+    <title>PhotoGraph Point Cloud Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="../js/libs/jquery-3.1.0.min.js"></script>
+    <script src="../js/libs/sprintf.js"></script>
+    <script src="../js/util.js"></script>
+</head>
+
+<body>
+    <script type="module">
+        import {WVViewer3D} from '../js/WVViewer3D.js';
+
+        var viewer = new WVViewer3D();
+        window.VIEWER = viewer;
+        viewer.start();
+
+    </script>
+</body>
+
+</html>
