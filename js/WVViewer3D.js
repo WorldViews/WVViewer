@@ -11,6 +11,7 @@ import { FlyControls } from '../modules/three/controls/FlyControls.js';
 class WVViewer3D {
     constructor(opts) {
         opts = opts || {};
+        this.elementId = opts.element;
         var plyURL = opts.plyURL;
         var recURL = opts.recURL;
         if (!plyURL)
@@ -42,11 +43,24 @@ class WVViewer3D {
 
     init() {
         var inst = this;
-        this.container = document.createElement('div');
-        document.body.appendChild(this.container);
-
+        var innerWidth = window.innerWidth;
+        var innerHeight = window.innerHeight;
+        if (this.elementId) {
+            this.container = document.getElementById(this.elementId);
+            if (this.container) {
+                innerWidth = this.container.clientWidth;
+                innerHeight = this.container.clientHeight;
+            }
+            else {
+                alert("cannot find " + this.elementId);
+            }
+        }
+        if (!this.container) {
+            this.container = document.createElement('div');
+            document.body.appendChild(this.container);
+        }
         this.camera = new THREE.PerspectiveCamera(35,
-            window.innerWidth / window.innerHeight, .1, 1000);
+            innerWidth / innerHeight, .1, 1000);
         this.camera.position.set(3, 1.0, 3);
 
         //var cameraTarget = new THREE.Vector3(0, - 0.3, 0);
@@ -72,7 +86,7 @@ class WVViewer3D {
         // renderer
         var renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(innerWidth, innerHeight);
         renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer = renderer;
         //renderer.shadowMap.enabled = true;
@@ -101,7 +115,20 @@ class WVViewer3D {
         this.stats = new Stats();
         this.container.appendChild(this.stats.dom);
         var params = this.params;
-        var gui = new GUI();
+        var opts = {name: "Viewer Controls"};
+        //opts.parent = this.elementId;
+        var gui;
+        var placeInParent = false;
+        if (placeInParent) {
+            //https://stackoverflow.com/questions/40523458/dat-gui-size-and-position-of-menu-javascript-css
+            opts.autoPlace = false;
+            var gui = new GUI(opts);
+            //gui.domElement = this.container;
+            this.container.appendChild(gui.domElement);    
+        }
+        else {
+            gui = new GUI(opts);
+        }
         this.gui = gui;
         var inst = this;
         gui.add(params, 'controllerType', this.controllerTypes).name('Controller').onChange(value => {
@@ -339,14 +366,20 @@ class WVViewer3D {
     }
 
     onWindowResize() {
-        this.camera.aspect = window.innerWidth / window.innerHeight;
+        var innerWidth = window.innerWidth;
+        var innerHeight = window.innerHeight;
+        if (this.elementId) {
+            innerWidth = this.container.clientWidth;
+            innerHeight = this.container.clientHeight;
+        }
+        this.camera.aspect = innerWidth / innerHeight;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(innerWidth, innerHeight);
     }
-    
+
 }
 
-export {WVViewer3D};
+export { WVViewer3D };
 
 
 
