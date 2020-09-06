@@ -86,6 +86,13 @@ class Display {
         this.player.seekTo(t);
     }
 
+    getPlayTime() {
+        if (!this.player) {
+            return null;
+        }
+        return this.player.getCurrentTime();
+    }
+    
     getView() {
         if (!this.player) {
             console.log("no player");

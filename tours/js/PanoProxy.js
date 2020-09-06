@@ -24,6 +24,14 @@ class PanoProxy {
     }
 
     getPlayTime() {
+        try {
+            var t = this.display.getPlayTime();
+            if (t != null)
+                this.playTime = t;
+        }
+        catch (e) {
+            
+        }
         return this.playTime;
     }
 
