@@ -1,0 +1,9 @@
+
+import json
+
+def dump(path):
+    obj = json.load(file(path))
+    print(len(obj))
+
+path = "models/reconstruction_86_detailed.json"
+dump(path)

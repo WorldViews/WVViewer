@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PhotoGraph Point Cloud Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="../js/libs/jquery-3.1.0.min.js"></script>
+    <script src="../js/libs/sprintf.js"></script>
+    <script src="../js/util.js"></script>
+</head>
+
+<body>
+    <div id="wvviewer" style="width:600px;height:500px"></div>
+    <script type="module">
+        import {WVViewer3D} from '../js/WVViewer3D.js';
+
+        var viewer = new WVViewer3D({element: "wvviewer"});
+        window.VIEWER = viewer;
+        viewer.start();
+
+    </script>
+</body>
+
+</html>
