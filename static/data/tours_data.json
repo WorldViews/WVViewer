@@ -4,10 +4,12 @@
       {
          "recType": "CoordinateSystem",
          "coordSys": "UCSC_Arboretum1",
-         "lat": 36.9826106,
-         "lon": -122.0604709,
+         "lat": 36.983298,
+         "lon": -122.06129,
          "alt": 41.0,
-         "heading": 0.0
+         "sx": 1.98,
+         "sy": 1.98,
+         "heading": 215.0
       },
       {
          "recType": "CoordinateSystem",
