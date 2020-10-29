@@ -3,11 +3,21 @@
    "records": [
       {
          "recType": "CoordinateSystem",
-         "coordSys": "UCSC_Arboretum",
+         "coordSys": "UCSC_Arboretum1",
          "lat": 36.9826106,
          "lon": -122.0604709,
          "alt": 41.0,
-         "heading": 32.0
+         "heading": 0.0
+      },
+      {
+         "recType": "CoordinateSystem",
+         "coordSys": "UCSC_Arboretum2",
+         "lat": 36.98284,
+         "lon": -122.06107,
+         "alt": 41.0,
+         "sx": 1.96,
+         "sy": 1.96,
+         "heading": 248.0
       },
       {
          "recType": "CoordinateSystem",
@@ -122,9 +132,9 @@
          "tourName": "arboretum_path_1",
          "dataUrl": "/static/data/paths/arboretum_path_1_vslam.json",
          "height": 0.0,
-         "youtubeId": "WJwEOm2wOgA",
+         "youtubeId": "z4nyiBTyeRI",
          "youtubeDeltaT": 0,
-         "coordSys": "UCSC_Arboretum"
+         "coordSys": "UCSC_Arboretum1"
       },
       {
          "id": "ucsc_arboretum_path_2",
@@ -135,9 +145,9 @@
          "tourName": "arboretum_path_2",
          "dataUrl": "/static/data/paths/arboretum_path_2_vslam.json",
          "height": 0.0,
-         "youtubeId": "WJwEOm2wOgA",
+         "youtubeId": "RGFJJhDE6so",
          "youtubeDeltaT": 0,
-         "coordSys": "UCSC_Arboretum"
+         "coordSys": "UCSC_Arboretum2"
       },
       {
          "id": "hiller_lobby_path_1",
