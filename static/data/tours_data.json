@@ -23,6 +23,16 @@
       },
       {
          "recType": "CoordinateSystem",
+         "coordSys": "UCSC_Arboretum3",
+         "lat": 36.98404,
+         "lon": -122.05987,
+         "alt": 41.0,
+         "sx": 4.82,
+         "sy": 4.82,
+         "heading": 345.0
+      },
+      {
+         "recType": "CoordinateSystem",
          "coordSys": "Devils_Slide",
          "lat": 37.57245,
          "lon": -122.5165,
@@ -150,6 +160,19 @@
          "youtubeId": "RGFJJhDE6so",
          "youtubeDeltaT": 0,
          "coordSys": "UCSC_Arboretum2"
+      },
+      {
+         "id": "ucsc_arboretum_path_3",
+         "site": "UCSC Arboretum",
+         "recType": "robotTrail",
+         "robotType": "wheelchair",
+         "description": "UCSC Arboretum Path 3",
+         "tourName": "arboretum_path_3",
+         "dataUrl": "/static/data/paths/arboretum_path_3_vslam.json",
+         "height": 0.0,
+         "youtubeId": "9zOqfRd7dHQ",
+         "youtubeDeltaT": 0,
+         "coordSys": "UCSC_Arboretum3"
       },
       {
          "id": "hiller_lobby_path_1",
