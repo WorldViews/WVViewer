@@ -33,12 +33,6 @@
 
 <body bg style="margin:10px">
     <style>
-        .tm {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
         #videoPlayer {
             xwidth: 500px;
             xheight: 300px;
@@ -55,8 +49,6 @@
             display: block;
             width: 100%;
             height: 100%;
-            margin-left: auto;
-            margin-right: auto;
             vertical-align: middle;
         }
 
@@ -64,6 +56,7 @@
             border-style: solid;
             border-width: 3px;
             height: 100%;
+            padding: 0px;
         }
         #map {
             xheight: 180px;
@@ -102,100 +95,13 @@
     <div id="footer">Footer</div>
 
     <script>
-        /*
-        */
        var ltours = null;
-        MAPBOX_TOKEN = "pk.eyJ1IjoiZG9ua2ltYmVyIiwiYSI6Ijc0NzFjYWUwM2E4NzgyNDc4M2Y1NTI3OTJlNWMyYjc5In0.xBSRvdl0XIy8SXDOIxRoCA";
-
-        TOUR_URL_BASE = "./data/";
-
-        SITE_NAME = "arboretum";
-        MAP_IMAGE_SERVER = "./images/";
-
-        PROPS = {
-            tours: [
-                "devils_slide_1_vslam"
-            ],
-            view: { x: 40, y: 42, width: 470 },
-            //graphicsURL: "./data/reach_and_teach_graphics.json",
-            images: [
-                //    {   url: "images/arboretum_1.jpg",
-                //        x: -320, y: -240, width: 640, height: 480  }
-            ]
-        }
-        videoId = "Vp_f_rWnZdg"
-
-        var display = new Display(null, "videoPlayer", { videoId });
-        //var pano = new PanoProxy(display);
-        var prevTourName = null;
-        //MAP_IMAGE_SERVER = "http://server/PanoJS/images/";
-        var mymap;
 
         $(document).ready(function () {
-            mymap = L.map('map').setView([51.505, -0.09], 13);
-
-            //var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-
-            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-                maxZoom: 18,
-                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                id: 'mapbox/streets-v11',
-                tileSize: 512,
-                zoomOffset: -1
-            }).addTo(mymap);
-
-            L.marker([51.5, -0.09]).addTo(mymap)
-                .bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
-
-            L.circle([51.508, -0.11], 500, {
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5
-            }).addTo(mymap).bindPopup("I am a circle.");
-
-            L.polygon([
-                [51.509, -0.08],
-                [51.503, -0.06],
-                [51.51, -0.047]
-            ]).addTo(mymap).bindPopup("I am a polygon.");
-
-
-            var popup = L.popup();
-
-            function onMapClick(e) {
-                popup
-                    .setLatLng(e.latlng)
-                    .setContent("You clicked the map at " + e.latlng.toString())
-                    .openOn(mymap);
-            }
-
-            mymap.on('click', onMapClick);
 
             ltours = new LeafletTours();
             ltours.loadTours();
 
-            /*
-            tourCanvas.noticeCurrentTour = function (tour) {
-                console.log("**** notice tour: " + tour.name);
-                if (tour.name == prevTourName) {
-                    console.log("same tour");
-                    return;
-                }
-                prevTourName = tour.name;
-                var vidName = tour.videoName;
-                if (!vidName)
-                    vidName = tour.name;
-                var url = "./video/Hiller/" + vidName + ".mp4";
-                console.log("vidName: " + vidName);
-                pano.setVideoURL(url);
-                if (tour.youtubeId) {
-                    var id = tour.youtubeId;
-                    console.log("youtubeId "+id);
-                    display.playVideo(id);
-                }
-            }
-            */
         });
 
     </script>
