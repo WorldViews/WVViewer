@@ -70,3 +70,33 @@ WV.getJSON = function (url, handler, errFun) {
 		}
 	});
 }
+
+// This is a promise based version of code for getting
+// JSON.  New code should use this instead of getJSON
+// and older code should migrate to this.
+WV.loadJSON = async function(url) {
+    console.log("loadJSON: " + url);
+    return new Promise((res, rej) => {
+        $.ajax({
+            url: url,
+            dataType: 'text',
+            success: function (str) {
+                var data;
+                try {
+                    data = JSON.parse(str);
+                }
+                catch (err) {
+                    console.log("err: " + err);
+                    alert("Error in json for: " + url + "\n" + err);
+                    rej(err);
+                }
+                res(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("Failed to get JSON for " + url);
+                rej(errorThrown);
+            }
+        });
+    })
+}
+
