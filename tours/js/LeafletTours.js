@@ -43,7 +43,7 @@ class LeafletTours {
         var lat = 36.98284;
         var lon = -122.06107;
         //alert("latlon "+lat+" "+lon);
-        var mymap = L.map('map').setView([lat,lon], 9);
+        var mymap = L.map('map').setView([lat, lon], 9);
         this.map = mymap;
 
         //var mymap = L.map('mapid').setView([51.505, -0.09], 13);
@@ -60,7 +60,7 @@ class LeafletTours {
         //L.marker([lat, lon]).addTo(mymap)
         //    .bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
 
-        L.circle([lat, lon+.2], 500, {
+        L.circle([lat, lon + .2], 500, {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.5
@@ -130,13 +130,30 @@ class LeafletTours {
         var cs = rec.coordSys;
         console.log("addTrail", rec, trail, cs);
         var csys = this.coordSystems[cs];
-        if (!csys) {
+        var lat, lon;
+        var pathLatLon;
+        if (cs == "GEO") {
+            var rec0 = trail.recs[0];
+            lat = rec0.pos[0];
+            lon = rec0.pos[1];
+            pathLatLon = trail.recs.map(rec => [rec.pos[0], rec.pos[1]]);
+            //return;
+        }
+        else if (!csys) {
             console.log(".......... no csys");
             return;
         }
-        var marker = L.marker([csys.lat, csys.lon]).addTo(this.map);
+        else {
+            lat = csys.lat;
+            lon = csys.lon;
+        }
+        var marker = L.marker([lat, lon]).addTo(this.map);
         marker.on('click', e => this.handleTrailMarkerClick(rec, csys));
+        // create a red polyline from an array of LatLng points
 
+        if (pathLatLon) {
+            var polyline = L.polyline(pathLatLon, { color: 'red' }).addTo(this.map);
+        }
     }
 
     loadCoordSys(rec) {
