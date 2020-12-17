@@ -222,6 +222,9 @@ WVL.setCurrentTrack = function (track) {
     console.log("setCurrentTrack id: " + desc.id);
     var videoId = desc.youtubeId;
     var videoDeltaT = desc.youtubeDeltaT;
+    if (WVL.display) {
+        WVL.display.playVideo(videoId);
+    }
     console.log("videoId: " + videoId);
     console.log("deltaT: " + videoDeltaT);
 };
@@ -231,7 +234,8 @@ WVL.clickOnTrack = function (e, track) {
     console.log("name: " + track.name);
     console.log("trail: " + track.trail);
     console.log("latLng: " + e.latlng);
-    WVL.setCurrentTrack(track);
+    if (track != WVL.currentTrack)
+        WVL.setCurrentTrack(track);
     var de = e.originalEvent;
     console.log("shift: " + de.shiftKey);
     var pt = [e.latlng.lat, e.latlng.lng];
