@@ -1,0 +1,121 @@
+<html>
+
+<head>
+    <script src="./js/jquery-3.1.1.min.js"></script>
+    <script src="./js/jquery-ui.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <script src="./js/Leaflet.geometryutils.js"></script>
+    <script src="./js/Leaflet.ImageOverlay.Rotated.js"></script>
+    <script src="./js/math3d.js"></script>
+    <script src="./js/Utils.js"></script>
+    <script src="./js/Display.js"></script>
+    <script src="./js/WVCoordSys.js"></script>
+    <script src="./js/WVL.js"></script>
+
+    <style>
+        //body {background-color:rgb(200,200,255);}
+        body {
+            background-color: cadetblue;
+        }
+
+        h1 {
+            color: darkblue;
+        }
+    </style>
+    <title>UCSC Arboretum 360 Video Virtual Tour</title>
+</head>
+
+<body bg style="margin:10px">
+    <style>
+        #videoPlayer {
+            xwidth: 500px;
+            xheight: 300px;
+            xxwidth: 500px;
+            height: 100%;
+            border-style: solid;
+            border-width: 1px
+        }
+
+        /* This gets created by display.js */
+        #videoDiv {
+            color: lightblue;
+            max-height: 100%;
+            display: block;
+            width: 100%;
+            height: 100%;
+            vertical-align: middle;
+        }
+
+        .mydiv {
+            border-style: solid;
+            border-width: 3px;
+            height: 100%;
+            padding: 0px;
+        }
+
+        #map {
+            xheight: 180px;
+            height: 100%;
+            width: 100%;
+        }
+
+        #header {
+            height: 40px;
+        }
+
+        #footer {
+            height: 40px;
+        }
+    </style>
+    <!--
+    <div>
+        <div id="videoPlayer">
+        </div>
+        <div id="map">
+            Map goes here
+        </div>
+    </div>
+    -->
+    <div id="header">Header</div>
+    <div class="container">
+        <div class="row" style="height:80%">
+            <div class="col-xs-6 mydiv" id="leftdiv">
+                <div id="videoPlayer">
+                </div>
+            </div>
+            <div class="col-xs-6 mydiv" id="rightdiv">
+                <div id="map">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">Footer</div>
+
+    <script>
+        var toursURL = "/static/data/tours_data.json";
+        var app;
+
+        $(document).ready(function () {
+
+            //ltours = new LeafletTours();
+            //ltours.loadTours();
+
+            app = new WVL.LeafletVideoApp();
+            app.loadTours(toursURL);
+         });
+
+    </script>
+</body>
+
+</html>
