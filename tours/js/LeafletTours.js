@@ -31,12 +31,23 @@ class LeafletTours {
 
     constructor() {
         this.tours = {};
-        this.coordSystems = {};
+        //this.coordSystems = {};
         this.map = null;
         var videoId = "Vp_f_rWnZdg"
-        this.display = new Display(null, "videoPlayer", { videoId });
+        this.display = new Display(this, "videoPlayer", { videoId });
         //var pano = new PanoProxy(display);
         this.initMap();
+        this.startWatcher();
+    }
+
+    startWatcher() {
+        var inst = this;
+        this.watcherHandle = setInterval(() => inst.update(), 1000);
+    }
+
+    update() {
+        var t = this.display.getPlayTime();
+        console.log("update t", t);
     }
 
     initMap() {
@@ -118,6 +129,14 @@ class LeafletTours {
         this.map.setView([csys.lat, csys.lon], 12);
     }
 
+    handleTrailClick(e, rec, csys) {
+        console.log("handleTrailClick", e, rec, csys);
+        var videoId = rec.youtubeId;
+        console.log("videoId", videoId);
+        this.display.playVideo(videoId);
+        //this.map.setView([csys.lat, csys.lon], 12);
+    }
+
     addMarker(opts) {
         console.log("addMarker", opts);
         let inst = this;
@@ -128,8 +147,9 @@ class LeafletTours {
     addTrail(trail) {
         var rec = trail.rec;
         var cs = rec.coordSys;
-        console.log("addTrail", rec, trail, cs);
-        var csys = this.coordSystems[cs];
+        //console.log("addTrail", rec, trail, cs);
+        var csys = WV.coordinateSystems[cs];
+        //var csys = this.coordSystems[cs];
         var lat, lon;
         var pathLatLon;
         if (cs == "GEO") {
@@ -146,6 +166,7 @@ class LeafletTours {
         else {
             lat = csys.lat;
             lon = csys.lon;
+            pathLatLon = trail.recs.map( rec => csys.xyzToLla(rec.pos));
         }
         var marker = L.marker([lat, lon]).addTo(this.map);
         marker.on('click', e => this.handleTrailMarkerClick(rec, csys));
@@ -153,38 +174,41 @@ class LeafletTours {
 
         if (pathLatLon) {
             var polyline = L.polyline(pathLatLon, { color: 'red' }).addTo(this.map);
+            polyline.on('click', e => this.handleTrailClick(e, rec, csys));
         }
     }
 
     loadCoordSys(rec) {
         var cs = rec.coordSys;
         console.log("coordSys", cs);
-        this.coordSystems[cs] = rec;
+        //this.coordSystems[cs] = rec;
+        WV.addCoordinateSystem(cs, rec);
         this.addMarker(rec);
     }
 
     async loadTrail(rec) {
         var id = rec.id;
         var url = rec.dataUrl;
-        console.log("loadTrail", id, rec, url);
+        //console.log("loadTrail", id, rec, url);
         if (!url) {
             console.log("**** ignoring trail with no dataUrl");
             return;
         }
         var tour = await WV.loadJSON(url);
         tour.rec = rec;
-        console.log("tour", id, tour);
+        //console.log("tour", id, tour);
         this.tours[id] = tour;
         this.addTrail(tour);
     }
 
     async loadTours() {
         var url = "../static/data/tours_data.json";
-        this.tours = await WV.loadJSON(url);
+        var TOURS_DATA = await WV.loadJSON(url);
         var inst = this;
+        window.TOURS_DATA = TOURS_DATA;
         window.TOURS = this.tours;
-        console.log("tours", this.tours);
-        this.tours.records.forEach(rec => {
+        console.log("tours", TOURS_DATA);
+        TOURS_DATA.records.forEach(rec => {
             switch (rec.recType) {
                 case "CoordinateSystem":
                     inst.loadCoordSys(rec);

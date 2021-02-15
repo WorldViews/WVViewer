@@ -90,7 +90,13 @@ class Display {
         if (!this.player) {
             return null;
         }
-        return this.player.getCurrentTime();
+        try {
+            return this.player.getCurrentTime();
+        }
+        catch (e) {
+            console.log("error calling player.getCurrentTime - probably YTAPI not ready\n", e);
+            return null;
+        }
     }
     
     getView() {

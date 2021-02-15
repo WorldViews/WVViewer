@@ -8,7 +8,8 @@
     <script src="./tours/js/math3d.js"></script>
     <script src="./tours/js/WVCoordSys.js"></script>
     <script src="./tours/js/WVL.js"></script>
-    
+    <script src="./tours/js/LeafletTours.js"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -20,9 +21,6 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
-    <script src="./tours/js/Leaflet.geometryutils.js"></script>
-    <script src="./tours/js/Leaflet.ImageOverlay.Rotated.js"></script>
-
     <title>WorldViews 360 Video Virtual Tours</title>
 
     <style>
@@ -97,7 +95,7 @@
         <button id="insetButton">inset</button>
     </div>
     <script>
-        var lvapp = null;
+        var ltours = null;
 
         function setModeSideBySide() {
             console.log("setModeSideBySide");
@@ -129,19 +127,37 @@
             $("#insetButton").html("inset");
         }
 
-        $(document).ready(async function () {
+        $(document).ready(function () {
 
-            //ltours = new LeafletTours();
-            //ltours.loadTours();
-            lvapp = new WVL.LeafletVideoApp();
-            window.lvapp = lvapp;
-            var toursUrl = "./static/data/tours_data.json";
-            await lvapp.loadTours(toursUrl);
-            //WVL.setCurrentTrack("devils_slide_1");
-            //WVL.setCurrentTrack("aroboretum_path_5");
-            // I think those don't work, because there is a race condition
-            // that the video may not be set up yet.
+            ltours = new LeafletTours();
+            ltours.loadTours();
 
+            /*
+            $("#mapMaster").click(() => {
+                console.log("mapMaster");
+                $("#leftdiv").removeClass("float-child master-child");
+                $("#leftdiv").addClass("inset");
+                $("#rightdiv").removeClass("float-child inset");
+                $("#rightdiv").addClass("master-child");
+            });
+
+            $("#videoMaster").click(() => {
+                console.log("videoMaster");
+                $("#leftdiv").removeClass("float-child");
+                $("#leftdiv").addClass("master-child");
+                $("#rightDiv").removeClass("float-child");
+                $("#rightdiv").addClass("inset");
+            });
+            $("#both").click(() => {
+                console.log("both");
+                //$("#leftdiv").css("class; float-child");
+                //$("#rightdiv").css("class; float-child");
+                $("#leftdiv").removeClass("master-child inset");
+                $("#leftdiv").addClass("float-child");
+                $("#rightdiv").removeClass("master-child inset");
+                $("#rightdiv").addClass("float-child");
+            });
+            */
             $("#insetButton").click(() => {
                 console.log("click on insetButton");
                 if ($("#insetButton").html() == "inset") {
