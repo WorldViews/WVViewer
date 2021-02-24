@@ -8,6 +8,7 @@
     <script src="./tours/js/math3d.js"></script>
     <script src="./tours/js/WVCoordSys.js"></script>
     <script src="./tours/js/WVL.js"></script>
+    <script src="./js/util.js"></script>
     
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -98,6 +99,8 @@
     </div>
     <script>
         var lvapp = null;
+        var tours = null;
+        var tourName = null;
 
         function setModeSideBySide() {
             console.log("setModeSideBySide");
@@ -137,6 +140,21 @@
             window.lvapp = lvapp;
             var toursUrl = "./static/data/tours_data.json";
             await lvapp.loadTours(toursUrl);
+            console.log("=============== got tours =================");
+            console.log("WVL.tours", WVL.tracks);
+            var n = 0;
+            for (var tname in WVL.tracks) {
+                console.log("trail ", tname);
+                n++;
+            }
+            console.log("num tracks", n);
+            console.log("===========");
+            tourName = getParameterByName("tour");
+                if (tourName) {
+                //alert("Tour: "+tourName);
+            }
+            tourName = tourName || "arboretum_path_1_vslam";
+            WVL.setCurrentTrack(tourName, true);
             //WVL.setCurrentTrack("devils_slide_1");
             //WVL.setCurrentTrack("aroboretum_path_5");
             // I think those don't work, because there is a race condition

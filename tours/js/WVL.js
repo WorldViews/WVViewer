@@ -217,7 +217,16 @@ WVL.clickOnMap = function (e) {
     console.log("shift: " + de.shiftKey);
 };
 
-WVL.setCurrentTrack = function (track) {
+WVL.dumpTracks = function() {
+    console.log("================")
+    console.log("tracks:");
+    for (var key in WVL.tracks) {
+        console.log("key", key, WVL.tracks[key]);
+    }
+    console.log("=================");
+}
+
+WVL.setCurrentTrack = function (track, setMapView) {
     console.log("-------------------------------");
     if (typeof track == "string") {
         var trackName = track;
@@ -238,6 +247,17 @@ WVL.setCurrentTrack = function (track) {
     }
     console.log("videoId: " + videoId);
     console.log("deltaT: " + videoDeltaT);
+    if (setMapView) {
+        if (!track.latLng) {
+            console.log("***** not latlng *****");
+            return;
+        }
+        var [lat,lng] = track.latLng[0];
+        //alert("lat lng "+lat+"    " + lng);
+        if (lat && lng) {
+            WVL.map.setView(new L.LatLng(lat, lng), 19, { animate: true });
+        }
+    }
 };
 
 WVL.clickOnTrack = function (e, track) {
@@ -333,7 +353,7 @@ WVL.LeafletVideoApp = class {
     }
 
     async loadTours(toursURL) {
-        WVL.loadTracksFromFile(toursURL);
+        return WVL.loadTracksFromFile(toursURL);
     }
 
     startWatcher() {
@@ -489,6 +509,7 @@ WVL.loadTracksFromAPI = function (map) {
 WVL.loadTrackFromFile = async function (trackDesc, url, map) {
     var data = await WV.loadJSON(url);
     WVL.handleTrack(trackDesc, data, url, map);
+    return data;
 };
 
 WVL.handleSIOMessage = function (msg) {
@@ -518,9 +539,11 @@ WVL.match = function (s1, s2) {
     return s1.toLowerCase() == s2.toLowerCase();
 };
 
-WVL.handleLayerRecs = function (tours, url, map) {
+WVL.handleLayerRecs = async function (tours, url, map) {
     console.log("got tours data from " + url);
-    tours.records.forEach(trackDesc => {
+    for (var i=0; i<tours.records.length; i++) {
+    //tours.records.forEach(async trackDesc => {
+        var trackDesc = tours.records[i];
         if (WVL.match(trackDesc.recType, "IndoorMap")) {
             console.log("**** indoor map ", trackDesc);
             var imap = trackDesc;
@@ -536,21 +559,23 @@ WVL.handleLayerRecs = function (tours, url, map) {
             //	    var imlayer = new WVL.ImageLayer(imap.imageUrl, {p1: p1, p2: p2, p3: p3});
             WVL.indoorMaps[imap.id] = imlayer;
             //imlayer.edit();
-            return;
+            continue;
         }
         if (trackDesc.recType.toLowerCase() == "coordinatesystem") {
             console.log("coordinateSystem " + JSON.stringify(trackDesc));
             WV.addCoordinateSystem(trackDesc.coordSys, trackDesc);
-            return;
+            continue;
         }
         if (trackDesc.recType != "robotTrail") {
-            return;
+            continue;
         }
         var trackId = trackDesc.id;
         //console.log("tour.tourId: " + trackId);
         var dataUrl = trackDesc.dataUrl;
-        WVL.loadTrackFromFile(trackDesc, dataUrl, map);
-    });
+        //console.log("getting", dataUrl);
+        var trackData = await WVL.loadTrackFromFile(trackDesc, dataUrl, map);
+        //console.log("got", trackData);
+    }
 };
 
 
@@ -558,7 +583,8 @@ WVL.loadTracksFromFile = async function (url, map) {
     console.log("**** WVL.loadTracksFromFile " + url);
     if (!map) map = WVL.map;
     var data = await WV.loadJSON(url);
-    WVL.handleLayerRecs(data, url, map);
+    await WVL.handleLayerRecs(data, url, map);
+    return data;
 };
 
 /*
