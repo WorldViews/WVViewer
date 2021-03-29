@@ -341,15 +341,25 @@ WVL.addLayerControl = function () {
 
 WVL.LeafletVideoApp = class {
     constructor() {
-        var videoId = "Vp_f_rWnZdg";
         var lat = 36.98284;
         var lon = -122.06107;
-        this.display = new Display(null, "videoPlayer", { videoId });
-        WVL.display = this.display;
         //var pano = new PanoProxy(display);
         var latlon = { lat, lng: lon };
         WVL.initmap(latlon);
         this.startWatcher();
+    }
+
+    async init(toursURL) {
+        await this.initDisplay();
+        if (toursURL)
+            await this.loadTours(toursURL);
+    }
+
+    async initDisplay() {
+        var videoId = "Vp_f_rWnZdg";
+        this.display = new Display(null, "videoPlayer", { videoId });
+        WVL.display = this.display;
+        await this.display.playerReady();
     }
 
     async loadTours(toursURL) {

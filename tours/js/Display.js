@@ -2,6 +2,12 @@
 
 var onYouTubeIframeAPIReady = null;
 
+async function sleep(secs) {
+    return new Promise((res, rej) => {
+        setTimeout(() => res(true), secs*1000);
+    });
+}
+
 class Display {
     constructor(gtool, parentName, opts) {
         opts = opts || {};
@@ -21,6 +27,21 @@ class Display {
         div.appendTo($('#' + parentName));
         this.setupYoutubeAPI();
         onYouTubeIframeAPIReady = () => inst.onYouTubeIframeAPIReady();
+    }
+
+    async playerReady() {
+        console.log("playerReady...");
+        return new Promise(async (res, rej) => {
+            for (var i=0; i<100 ; i++) {
+                if (this.player) {
+                    console.log("player is ready");
+                    return res(this.player);
+                }
+                console.log("playerReady sleeping...", i);
+                await sleep(0.2);
+            }
+            return rej("timeout");
+        });
     }
 
     showImage(imgURL) {
@@ -60,6 +81,7 @@ class Display {
 
     // 4. The API will call this function when the video player is ready.
     onPlayerReady(event) {
+        console.log("onPlayerReady");
         //alert("player ready!");
         event.target.playVideo();
     }

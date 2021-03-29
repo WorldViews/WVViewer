@@ -9,7 +9,7 @@
     <script src="./tours/js/WVCoordSys.js"></script>
     <script src="./tours/js/WVL.js"></script>
     <script src="./js/util.js"></script>
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -139,7 +139,7 @@
             lvapp = new WVL.LeafletVideoApp();
             window.lvapp = lvapp;
             var toursUrl = "./static/data/tours_data.json";
-            await lvapp.loadTours(toursUrl);
+            await lvapp.init(toursUrl);
             console.log("=============== got tours =================");
             console.log("WVL.tours", WVL.tracks);
             var n = 0;
@@ -149,16 +149,6 @@
             }
             console.log("num tracks", n);
             console.log("===========");
-            tourName = getParameterByName("tour");
-                if (tourName) {
-                //alert("Tour: "+tourName);
-            }
-            tourName = tourName || "arboretum_path_1_vslam";
-            WVL.setCurrentTrack(tourName, true);
-            //WVL.setCurrentTrack("devils_slide_1");
-            //WVL.setCurrentTrack("aroboretum_path_5");
-            // I think those don't work, because there is a race condition
-            // that the video may not be set up yet.
 
             $("#insetButton").click(() => {
                 console.log("click on insetButton");
@@ -168,8 +158,20 @@
                 else {
                     setModeSideBySide();
                 }
-
             });
+
+            tourName = getParameterByName("tour");
+            tourName = tourName || "arboretum_path_1_vslam";
+            try {
+                WVL.setCurrentTrack(tourName, true);
+            }
+            catch (err) {
+                console.log("Error setting current track", err);
+            }
+            //WVL.setCurrentTrack("devils_slide_1");
+            //WVL.setCurrentTrack("aroboretum_path_5");
+            // I think those don't work, because there is a race condition
+            // that the video may not be set up yet.
         });
 
     </script>
