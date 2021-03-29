@@ -5,6 +5,7 @@
 var WVL = {};
 
 WVL.display = null;
+WVL.trackDescs = {};
 WVL.tracks = {};
 WVL.currentTrack = null;
 WVL.cursor = null;
@@ -226,14 +227,24 @@ WVL.dumpTracks = function() {
     console.log("=================");
 }
 
-WVL.setCurrentTrack = function (track, setMapView) {
+WVL.setCurrentTrack = async function (track, setMapView) {
     console.log("-------------------------------");
     if (typeof track == "string") {
         var trackName = track;
-        track = WVL.tracks[track];
+        track = WVL.tracks[trackName];
         if (track == null) {
-            console.log("*** no such track as", trackName);
-            return;
+            console.log("*** track not yet loaded", trackName);
+            var trackDesc = WVL.trackDescs[trackName];
+            if (trackDesc == null) {
+                console.log("*** no such track as", trackName);
+                return;
+            }
+            var dataUrl = trackDesc.dataUrl;
+            await WVL.loadTrackFromFile(trackDesc, dataUrl, WVL.map);
+        }
+        track = WVL.tracks[trackName];
+        if (track == null) {
+            console.log("*** unable to load track", trackName);
         }
     }
     
@@ -351,12 +362,14 @@ WVL.LeafletVideoApp = class {
 
     async init(toursURL) {
         await this.initDisplay();
-        if (toursURL)
+        if (toursURL) {
             await this.loadTours(toursURL);
+        }
     }
 
     async initDisplay() {
         var videoId = "Vp_f_rWnZdg";
+        videoId = "xxxxxx";
         this.display = new Display(null, "videoPlayer", { videoId });
         WVL.display = this.display;
         await this.display.playerReady();
@@ -413,8 +426,6 @@ WVL.initmap = function (latlng, bounds) {
     //    WVL.setViewHome();
     //}).addTo(map);
 
-    //WVL.loadTracksFromAPI(map);
-    //WVL.loadTracksFromFile(WVL.toursUrl, map);
     WVL.cursor = L.marker([0, 0]);
     WVL.cursor.addTo(map);
     WVL.setPlayTime(0);
@@ -426,6 +437,8 @@ WVL.initmap = function (latlng, bounds) {
 var TD;
 WVL.handleTrack = function (trackDesc, trackData, url, map) {
     var name = trackData.name;
+    name = trackDesc.id; //********* Not sure if this is safe!!!
+    console.log("handleTrack id:", trackDesc.id, " name:", name);
     trackData.desc = trackDesc; //*** NOTE: these set up a circular reference
     trackDesc.data = trackData;
     WVL.tracks[name] = trackData;
@@ -503,6 +516,7 @@ WVL.loadTrackFromAPI = function (trackDesc, map) {
     });
 };
 
+/*
 WVL.loadTracksFromAPI = function (map) {
     var url = "/api/v1/track/mempark_Mar_23_2017_11_25_28_AM_2017-03-23_11-25-28";
     var trackDescs = [{
@@ -514,7 +528,7 @@ WVL.loadTracksFromAPI = function (map) {
         WVL.loadTrackFromAPI(trackDesc, map);
     });
 };
-
+*/
 
 WVL.loadTrackFromFile = async function (trackDesc, url, map) {
     var data = await WV.loadJSON(url);
@@ -583,17 +597,48 @@ WVL.handleLayerRecs = async function (tours, url, map) {
         //console.log("tour.tourId: " + trackId);
         var dataUrl = trackDesc.dataUrl;
         //console.log("getting", dataUrl);
-        var trackData = await WVL.loadTrackFromFile(trackDesc, dataUrl, map);
+        WVL.trackDescs[trackId] = trackDesc;
+        console.log("skipping loading of", trackDesc.id);
+        //var trackData = await WVL.loadTrackFromFile(trackDesc, dataUrl, map);
         //console.log("got", trackData);
     }
+    //await WVL.loadAllTracksData(map);
 };
 
 
+// This goes through all loaded trackDescs and reads their data files.
+WVL.loadAllTracksData = async function(map) {
+    console.log("loadAllTracksData");
+    for (var id in WVL.trackDescs) {
+        console.log("loadTracksData id", id);
+        var trackDesc = WVL.trackDescs[id];
+        var dataUrl = trackDesc.dataUrl;
+        await WVL.loadTrackFromFile(trackDesc, dataUrl, map);
+    }
+}
+
+// this loads the top level tours file that has all the tours
+// coordinate systems, indoor maps, etc.   It does not contain
+// the path data for each tour.  Those are stored in separate
+// JSON files
 WVL.loadTracksFromFile = async function (url, map) {
     console.log("**** WVL.loadTracksFromFile " + url);
     if (!map) map = WVL.map;
     var data = await WV.loadJSON(url);
+
+    // This will process all the records, and load the track descriptors
+    // into WVL.trackDescs for each track, but not load the path data.
     await WVL.handleLayerRecs(data, url, map);
+    //
+    // This will actually load the paths data.
+    var lazy = true;
+    if (lazy) {
+        WVL.loadAllTracksData(map);
+    }
+    else {
+        await WVL.loadAllTracksData(map);
+    }
+    console.log("all tracks loaded");
     return data;
 };
 

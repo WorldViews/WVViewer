@@ -144,7 +144,7 @@
             console.log("WVL.tours", WVL.tracks);
             var n = 0;
             for (var tname in WVL.tracks) {
-                console.log("trail ", tname);
+                console.log("trail", tname);
                 n++;
             }
             console.log("num tracks", n);
@@ -161,7 +161,8 @@
             });
 
             tourName = getParameterByName("tour");
-            tourName = tourName || "arboretum_path_1_vslam";
+            //tourName = tourName || "arboretum_path_1_vslam";
+            tourName = tourName || "ucsc_arboretum_path_1";
             try {
                 WVL.setCurrentTrack(tourName, true);
             }
@@ -169,7 +170,7 @@
                 console.log("Error setting current track", err);
             }
             //WVL.setCurrentTrack("devils_slide_1");
-            //WVL.setCurrentTrack("aroboretum_path_5");
+            //WVL.setCurrentTrack("ucsc_aroboretum_path_5");
             // I think those don't work, because there is a race condition
             // that the video may not be set up yet.
         });

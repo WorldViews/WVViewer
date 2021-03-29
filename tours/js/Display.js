@@ -25,6 +25,7 @@ class Display {
         str += '</div>';
         var div = $(str);
         div.appendTo($('#' + parentName));
+        this.playerIsReady = false;
         this.setupYoutubeAPI();
         onYouTubeIframeAPIReady = () => inst.onYouTubeIframeAPIReady();
     }
@@ -33,7 +34,7 @@ class Display {
         console.log("playerReady...");
         return new Promise(async (res, rej) => {
             for (var i=0; i<100 ; i++) {
-                if (this.player) {
+                if (this.player && this.playerIsReady) {
                     console.log("player is ready");
                     return res(this.player);
                 }
@@ -84,6 +85,8 @@ class Display {
         console.log("onPlayerReady");
         //alert("player ready!");
         event.target.playVideo();
+        console.log("setting playerIsReady true");
+        this.playerIsReady = true;
     }
 
     // 5. The API calls this function when the player's state changes.
@@ -109,7 +112,7 @@ class Display {
     }
 
     getPlayTime() {
-        if (!this.player) {
+        if (!this.player || !this.playerIsReady) {
             return null;
         }
         try {
