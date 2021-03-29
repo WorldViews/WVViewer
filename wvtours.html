@@ -139,7 +139,8 @@
             lvapp = new WVL.LeafletVideoApp();
             window.lvapp = lvapp;
             var toursUrl = "./static/data/tours_data.json";
-            await lvapp.init(toursUrl);
+            var videoId = "z4nyiBTyeRI";
+            await lvapp.init(toursUrl, videoId);
             console.log("=============== got tours =================");
             console.log("WVL.tours", WVL.tracks);
             var n = 0;

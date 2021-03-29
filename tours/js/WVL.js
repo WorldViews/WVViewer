@@ -360,16 +360,15 @@ WVL.LeafletVideoApp = class {
         this.startWatcher();
     }
 
-    async init(toursURL) {
-        await this.initDisplay();
+    async init(toursURL, videoId) {
+        await this.initDisplay(videoId);
         if (toursURL) {
             await this.loadTours(toursURL);
         }
     }
 
-    async initDisplay() {
-        var videoId = "Vp_f_rWnZdg";
-        videoId = "xxxxxx";
+    async initDisplay(videoId) {
+        videoId = videoId || "Vp_f_rWnZdg";
         this.display = new Display(null, "videoPlayer", { videoId });
         WVL.display = this.display;
         await this.display.playerReady();
